@@ -1,0 +1,9 @@
+IDEs and Editors
+
+.idea/
+.vscode/
+
+Dependencies
+
+node_modules/
+package-lock.json
