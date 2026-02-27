@@ -1,3 +1,4 @@
+// 1. Initialize Lenis for Smooth Scrolling
 const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -10,6 +11,7 @@ const lenis = new Lenis({
     infinite: false,
 });
 
+// Sync Lenis with GSAP ScrollTrigger
 lenis.on('scroll', ScrollTrigger.update);
 
 gsap.ticker.add((time) => {
@@ -18,9 +20,15 @@ gsap.ticker.add((time) => {
 
 gsap.ticker.lagSmoothing(0, 0);
 
-
+// 2. Wait for DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Register GSAP Plugin early
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ==========================================
+       A. NATIVE DOM MAPPING (INTERACTIVE GRID)
+       ========================================== */
     const mappings = {
         tech: { fintech: "Algorithmic Triggers", logtech: "Carrier API Integration", vc: "Codebase Auditing" },
         reg: { fintech: "Payment Rails Compliance", logtech: "Cross-border Customs", vc: "Regulatory Moat Analysis" },
@@ -67,7 +75,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    gsap.registerPlugin(ScrollTrigger);
+    /* ==========================================
+       B. SMART NAVBAR (HIDE ON SCROLL DOWN)
+       ========================================== */
+    const showAnim = gsap.from('nav', {
+        yPercent: -100,
+        paused: true,
+        duration: 0.3,
+        ease: "power2.out"
+    }).progress(1);
+
+    ScrollTrigger.create({
+        start: "top top",
+        end: "max",
+        onUpdate: (self) => {
+            // Hide on scroll down, show on scroll up
+            if (self.direction === 1) {
+                showAnim.reverse();
+            } else {
+                showAnim.play();
+            }
+        }
+    });
+
+    /* ==========================================
+       C. GSAP ANIMATIONS & SCROLL TRIGGERS
+       ========================================== */
     const tl = gsap.timeline();
 
     // Reveal Hero Text lines
@@ -80,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         delay: 0.2
     });
 
+    // Fade in secondary hero elements
     tl.fromTo(".gsap-reveal",
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
@@ -92,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "-=0.8"
     );
 
+    // ScrollTrigger Animations for remaining sections
     const scrollElements = document.querySelectorAll('.gsap-scroll-fade');
     scrollElements.forEach((el) => {
         gsap.fromTo(el,
