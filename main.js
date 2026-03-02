@@ -1,4 +1,3 @@
-// 1. Initialize Lenis for Smooth Scrolling
 const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -20,7 +19,7 @@ gsap.ticker.add((time) => {
 
 gsap.ticker.lagSmoothing(0, 0);
 
-// 2. Wait for DOM to be fully loaded
+// Wait for DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", () => {
 
     // Register GSAP Plugin early
@@ -144,4 +143,42 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
     });
+
+    /* ==========================================
+       D. BACK TO TOP & PROGRESS RING
+       ========================================== */
+    const backToTop = document.getElementById('back-to-top');
+    const progressRing = document.getElementById('progress-ring');
+
+    if (backToTop && progressRing) {
+        // Calculate the circumference of the circle (2 * PI * Radius)
+        // Our SVG circle has a radius (r) of 24
+        const circumference = 2 * Math.PI * 24;
+
+        // Initialize the SVG stroke properties
+        progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+        progressRing.style.strokeDashoffset = circumference;
+
+        // Hook into the existing Lenis scroll engine
+        lenis.on('scroll', ({ scroll, limit, progress }) => {
+
+            // 1. Math: Map the scroll progress (0 to 1) to the SVG stroke offset
+            const offset = circumference - (progress * circumference);
+            progressRing.style.strokeDashoffset = offset;
+
+            // 2. Visibility: Show button after scrolling down 300px
+            if (scroll > 300) {
+                backToTop.classList.replace('opacity-0', 'opacity-100');
+                backToTop.classList.remove('pointer-events-none');
+            } else {
+                backToTop.classList.replace('opacity-100', 'opacity-0');
+                backToTop.classList.add('pointer-events-none');
+            }
+        });
+
+        // Click event to scroll back to the top smoothly
+        backToTop.addEventListener('click', () => {
+            lenis.scrollTo(0, { duration: 1.2 });
+        });
+    }
 });

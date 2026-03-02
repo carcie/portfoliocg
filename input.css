@@ -56,3 +56,8 @@ body {
 .node-transition {
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Progress Ring Smoothness */
+#progress-ring {
+    transition: stroke-dashoffset 50ms ease-out;
+}
