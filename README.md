@@ -1,6 +1,6 @@
-Portfolio - Operations & Risk Engineering
+Portfolio - Operations & Risk
 
-A static, brutalist portfolio demonstrating the intersection of cross-border logistics, financial mathematics, and jurisdictional compliance.
+A static, brutalist portfolio.
 
 Tech Stack
 
@@ -11,5 +11,3 @@ Tailwind CSS v4
 GSAP (Animations)
 
 Lenis (Smooth Scrolling)
-
-Note: Proprietary logic and specific client data have been sanitized from this repository to comply with NDAs.
